@@ -1,20 +1,21 @@
 name: Label Issues (Permissions Example)
+
 on:
   issues:
     types:
       - opened
+
 jobs:
   assign-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign label
+      - name: Assign label if title contains "bug"
         if: contains(github.event.issue.title, 'bug')
         run: |
           curl -X POST \
-          --url https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
-          -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          -H 'content-type: application/json' \
-          -d '{
-              "labels": ["bug"]
-            }' \
-          --fail
+            --url https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            -d '{"labels": ["bug"]}' \
+            --fail
